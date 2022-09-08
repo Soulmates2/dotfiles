@@ -12,6 +12,10 @@ ARG PASSWORD=geometry
 ARG UID
 ARG GID
 
+# To solve GPG error (public key)
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3bf863cc
+# RUN apt-key del 7fa2af80 && apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
+
 # install some essential packages
 RUN apt-get update && apt-get install -y \
 	apt-utils \

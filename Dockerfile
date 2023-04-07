@@ -1,5 +1,5 @@
-FROM pytorch/pytorch:1.9.1-cuda11.1-cudnn8-devel
-
+# FROM pytorch/pytorch:1.9.1-cuda11.1-cudnn8-devel
+FROM pytorch/pytorch:2.0.0-cuda11.7-cudnn8-devel
 # To dismiss interactive messages while installing packages
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -8,37 +8,59 @@ ARG USER_NAME=geometry
 ARG PASSWORD=geometry
 
 # UID and GID should be manually declared when building Dockerfile.
-# e.g. docker build --build-arg UID=$UID --build-arg GID=$GID
+# e.g. docker build --build-arg UID=$UID
 ARG UID
-ARG GID
-
-# To solve GPG error (public key)
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3bf863cc
-# RUN apt-key del 7fa2af80 && apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
 
 # install some essential packages
 RUN apt-get update && apt-get install -y \
-	apt-utils \
-	build-essential \
+    apt-utils \
+    x11-apps \
+    eog \
+    build-essential \
     curl \
     git \
     man \
     wget \
+    aria2 \
+    zip \
     htop \
     vim \
     nano \
     ctags \
-	openssh-server \
-	sudo \
+    openssh-server \
+    sudo \
     tmux \
-	cmake \
+    cmake \
     software-properties-common \
     libgl1-mesa-glx \
-	locales \
+    locales \
     tzdata \
-    xorg \
-	zsh && \
-	apt-get -y autoremove && apt-get -y clean
+    zsh && \
+    apt-get -y autoremove && apt-get -y clean
+
+# for libigl
+RUN apt-get install -y \
+    xorg-dev \
+    freeglut3 \
+    freeglut3-dev \
+    mesa-common-dev \
+    libosmesa6-dev \
+    libgl1-mesa-dev \
+    libglu1-mesa-dev \
+    libx11-dev \
+    libxi-dev \
+    libxmu-dev \
+    libgflags-dev \
+    libgoogle-glog-dev \
+    libgmp3-dev \
+    libmpfr-dev \
+    libhdf5-serial-dev && \
+    apt-get -y autoremove && apt-get -y clean
+
+# for ImageMagick
+RUN apt-get install -y libjpeg62-dev 
+RUN apt-get install -y libtiff-dev 
+
 
 # set a timezone as Asia/Seoul
 ENV TZ Asia/Seoul
@@ -57,14 +79,12 @@ RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 RUN systemctl enable ssh
 
-
 # set the root password
 RUN echo "root:root" | chpasswd 
 
 # add a user
-RUN groupadd -g $GID $USER_NAME
-RUN useradd -u $UID -g $GID $USER_NAME && echo "${USER_NAME}:${PASSWORD}" | chpasswd && adduser $USER_NAME sudo
-
+RUN groupadd -g $UID $USER_NAME
+RUN useradd -u $UID -g $UID $USER_NAME && echo "${USER_NAME}:${PASSWORD}" | chpasswd && adduser $USER_NAME sudo
 USER $USER_NAME
 
 WORKDIR /home/$USER_NAME

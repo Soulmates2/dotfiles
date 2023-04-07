@@ -1,6 +1,5 @@
-docker build -t kaist984 \
-    --build-arg USER_NAME=kaist984 \
-    --build-arg PASSWORD=geometry \
+docker build -t kunho \
+    --build-arg USER_NAME=$USER \
+    --build-arg PASSWORD=qwer1234 \
     --build-arg UID=$UID \
-    --build-arg GID=$UID \
     .

@@ -47,7 +47,7 @@ sed -i 's/robbyrussell/agnoster/' ~/.zshrc
 
 echo 'prompt_context() {
 	if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-		prompt_segment black default "%(!.%{%F{yellow}%}.) juil"
+		prompt_segment black default "%(!.%{%F{yellow}%}.) kunho"
 	fi
 }' >> ${HOME}/.zshrc
 

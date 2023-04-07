@@ -8,5 +8,6 @@ docker run -it \
     --name kunho \
     -h geometry1docker \
     -v /home/kaist984/docker:/home/kaist984 \
+    -v /scratch:/scratch \
     kaist984 \
-    /bin/bash
+    /bin/zsh

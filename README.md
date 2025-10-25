@@ -9,7 +9,6 @@ $ docker build -t @IMAGE_NAME \
     --build-arg USER_NAME=@YOUR_NAME \
     --build-arg PASSWORD=@YOUR_PASSWORD \
     --build-arg UID=$UID \
-    --build-arg GID=$GID \ 
     .
 ```
 or
@@ -40,7 +39,7 @@ docker run \
     --name @CONTAINER_NAME \
     -v @HOST_DIR:@CONTAINER_DIR \ # e.g. -v /home/kunho/docker_home:/home/kunho
     @IMAGE_NAME \ # docker image
-    /bin/bash
+    /bin/zsh
 ```
 After entering the container, start ssh:
 `$ sudo service ssh start`
@@ -50,4 +49,3 @@ Now you can directly access to the container:
 `$ ssh YOUR_NAME@YOUR_SERVER_IP -p PORT`
 
 ---
-*credit from 63days(Juil Koo)*

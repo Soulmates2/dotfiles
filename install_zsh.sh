@@ -57,6 +57,34 @@ if [ $(program_is_installed nvim) == 1 ]; then
 	echo 'alias vim="nvim"' >> ~/.zshrc
 fi
 
+echo '# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/kunho/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/kunho/miniconda3/etc/profile.d/conda.sh" ]; then
+         . "/home/kunho/miniconda3/etc/profile.d/conda.sh"
+    else
+         export PATH="/home/kunho/miniconda3/bin:$PATH"  
+    fi
+fi
+unset __conda_setup
+' >> ${HOME}/.zshrc
+
+
+echo '# CUDA PATH
+export PATH=/usr/local/cuda-11.8/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda-11.8/lib64:$LD_LIBRARY_PATH
+' >> ${HOME}/.zshrc
+
+
+echo '# Hugging Face cache directory
+export HF_DATASETS_CACHE=/home/kunho/.cache
+export HF_HUB_CACHE=/home/kunho/.cache
+export HUGGINGFACE_HUB_CACHE=/home/kunho/.cache
+export HF_HOME=/home/kunho/.cache
+' >> ${HOME}/.zshrc
+
+
 source ${HOME}/.zshrc
-
-

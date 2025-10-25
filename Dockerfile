@@ -1,18 +1,19 @@
-# FROM pytorch/pytorch:1.9.1-cuda11.1-cudnn8-devel
-FROM pytorch/pytorch:2.0.0-cuda11.7-cudnn8-devel
+FROM pytorch/pytorch:2.4.0-cuda11.8-cudnn9-devel
+# FROM pytorch/pytorch:2.4.0-cuda12.1-cudnn9-devel
 # To dismiss interactive messages while installing packages
 ARG DEBIAN_FRONTEND=noninteractive
 
 # set a user name and a password 
-ARG USER_NAME=geometry
-ARG PASSWORD=geometry
+ARG USER_NAME
+ARG PASSWORD
 
-# UID and GID should be manually declared when building Dockerfile.
+# UID should be manually declared when building Dockerfile.
 # e.g. docker build --build-arg UID=$UID
 ARG UID
 
 # install some essential packages
-RUN apt-get update && apt-get install -y \
+RUN apt-get update
+RUN apt-get install -y \
     apt-utils \
     x11-apps \
     eog \
@@ -26,7 +27,6 @@ RUN apt-get update && apt-get install -y \
     htop \
     vim \
     nano \
-    ctags \
     openssh-server \
     sudo \
     tmux \
@@ -35,8 +35,8 @@ RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \
     locales \
     tzdata \
-    zsh && \
-    apt-get -y autoremove && apt-get -y clean
+    zsh
+RUN apt-get -y autoremove && apt-get -y clean
 
 # for libigl
 RUN apt-get install -y \
@@ -85,7 +85,17 @@ RUN echo "root:root" | chpasswd
 # add a user
 RUN groupadd -g $UID $USER_NAME
 RUN useradd -u $UID -g $UID $USER_NAME && echo "${USER_NAME}:${PASSWORD}" | chpasswd && adduser $USER_NAME sudo
-USER $USER_NAME
-
-WORKDIR /home/$USER_NAME
 EXPOSE 22
+
+USER $USER_NAME
+WORKDIR /home/$USER_NAME
+RUN chown -R $USER_NAME:$USER_NAME /home/$USER_NAME
+
+# install oh-my-zsh
+COPY install_zsh.sh /home/$USER_NAME/install_zsh.sh
+RUN bash install_zsh.sh
+
+USER root
+RUN chsh -s /bin/zsh $USER_NAME
+
+USER $USER_NAME
